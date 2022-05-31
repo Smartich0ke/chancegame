@@ -18,6 +18,10 @@ int startTime;
 int stopTime;
 int currTime;
 
+int button1State;
+int button2State;
+int button3State;
+
 //Initialize the display:
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -27,7 +31,7 @@ void setup() {
     Serial.println(F("SSD1306 allocation failed"));
     for(;;);
   }
-
+  Serial.begin(9600);
   pinMode(BUTTON_1, INPUT_PULLUP);
   pinMode(BUTTON_2, INPUT_PULLUP);
   pinMode(BUTTON_3, INPUT_PULLUP);
@@ -66,16 +70,23 @@ void loop() {
   stopTime = startTime + random(500, 5000);
   for (currTime = 0; currTime <= stopTime;){
     currTime = millis();
+    button1State = digitalRead(BUTTON_1);
     if (BUTTON_1 == 0) {
-      display.fillCircle(display.width()/2, display.height()/2, 10, SSD1306_WHITE);
-      delay(200);
+      Serial.println("button loop running");
+      display.clearDisplay();
       display.fillCircle((display.width()/3)-15, display.height()/2, 10, SSD1306_WHITE);
+      display.display();
+      delay(200);
+      display.fillCircle(display.width()/2, display.height()/2, 10, SSD1306_WHITE);
+      display.display();
       delay(200);
       display.fillCircle(((display.width()/3)*2)+15, display.height()/2, 10, SSD1306_WHITE);
+      display.display();
       display.setCursor(0, 4);
       display.setTextSize(1.8);
-      display.write("Ahhh. Too slow!!");
+      display.write("Ahhh. Too fast!!");
       display.display();
+      delay(5000);
     }
   }
 }
