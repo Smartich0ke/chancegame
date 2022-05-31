@@ -23,10 +23,32 @@ void setup() {
     Serial.println(F("SSD1306 allocation failed"));
     for(;;);
   }
+  pinMode(BUTTON_1, INPUT_PULLUP);
+  pinMode(BUTTON_2, INPUT_PULLUP);
+  pinMode(BUTTON_3, INPUT_PULLUP);
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
+  display.cp437(true);
+  display.write(" Chance\n  v0.1.0"); 
+  display.setCursor(0, 40);
+  display.setTextSize(1.2);
+  display.write("    By Nikolai");
+  display.display();
+  delay(3000);
+  display.clearDisplay();
+  display.setCursor(0, 20);
+  display.setTextSize(1.8);
+  display.write("Press the button\nunder the light that\nturns on first!\nYou have 100ms\nfor each turn.");
+  display.display();
+  delay(5000);
 }
 
 void loop() {
-pinMode(BUTTON_1, INPUT_PULLUP);
-pinMode(BUTTON_2, INPUT_PULLUP);
-pinMode(BUTTON_3, INPUT_PULLUP);
+
+
+  display.drawCircle(display.width()/2, display.height()/2, 10, SSD1306_WHITE);
+  display.drawCircle(display.width()/3, display.height()/2, 10, SSD1306_WHITE);
+  display.drawCircle((display.width()/3)*3, display.height()/2, 10, SSD1306_WHITE);
 }
