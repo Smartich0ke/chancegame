@@ -56,6 +56,8 @@ class scoreboard {
       display.print(userPoints);
       display.display();
       delay(2000);
+      display.clearDisplay();
+      display.display();
     }
     scoreboard() {
     rounds = 0;
@@ -65,6 +67,8 @@ class scoreboard {
     rounds = 0;
   }
 };
+
+scoreboard currScore;
 
 void setup() {
   //stop and loop forever if display allocation fails
@@ -104,10 +108,11 @@ void setup() {
   display.display();
   delay(1000);
 
+  
+
 }
 
 void loop() {
-  scoreboard currScore;
   //Draw unfilled circles and display "Get ready!!" text:
   display.clearDisplay();
   display.setCursor(0, 4);
@@ -134,28 +139,46 @@ void loop() {
 
     //if someone presses a button to early, the Arduino gains a point:
     if (button1State == 0 || button2State == 0 || button3State == 0) {
+      display.clearDisplay();
+      display.setCursor(4, 4);
+      display.print("too early!!");
+      display.display();
+      delay(1000);
       currScore.arduinoPoints++;
       currScore.rounds++;
       currScore.displayScore();
+      currTime = stopTime;
+      button1State = 1;
+      button2State = 1;
+      button3State = 1;
+      while (button1State == 1) {
+        button1State = digitalRead(BUTTON_1);
+      }
     }
   }
+  display.clearDisplay();
+  display.setCursor(4, 4);
+  display.print("go!!");
+  display.display();
   randomSeed(analogRead(A0));
-  pickedCircle = random(1, 4); //Remember, the max is exclusive so really this is picking a number 1, 3 or 3
+  pickedCircle = 1; //Remember, the max is exclusive so really this is picking a number 1, 3 or 3
   switch (pickedCircle) {
   case 1:
     display.fillCircle((display.width()/3)-15, display.height()/2, 10, SSD1306_WHITE);
+    display.display();
   break;
   case 2:
     display.fillCircle(display.width()/2, display.height()/2, 10, SSD1306_WHITE);
+    display.display();
   break;
   case 3:
     display.fillCircle(((display.width()/3)*2)+15, display.height()/2, 10, SSD1306_WHITE);
+    display.display();
   break;
   }
+  buttonPressed = 0;
   startTime = millis();
-  stopTime = startTime + 500;
-  display.print("go!!");
-  display.display();
+  stopTime = startTime + 5000;
   for (currTime = 0; currTime <= stopTime;){
     currTime = millis();
     button1State = digitalRead(BUTTON_1);
@@ -172,16 +195,33 @@ void loop() {
     }
     if (buttonPressed == pickedCircle) {
       display.clearDisplay();
+      display.display();
       currScore.userPoints++;
       currScore.displayScore();
     }
-    else {
+    else if (buttonPressed > 0 && buttonPressed != pickedCircle) {
       display.clearDisplay();
-      display.print("wrong button!!");
+      display.print("wrong button!!\n\nPress the middle button to continue");
       display.display();
       delay(1000);
       currScore.arduinoPoints++;
       currScore.displayScore();
+      button1State = 1;
+      button2State = 1;
+      button3State = 1;
+      while (button1State == 1) {
+        button1State = digitalRead(BUTTON_1);
+      }
+      
     }
   }
+  display.clearDisplay();
+  display.setCursor(4, 4);
+  display.print("too late!!");
+  display.display();
+  delay(1000);
+  while (button1State == 1) {
+    button1State = digitalRead(BUTTON_1);
+  }
+  delay(500);
 }
