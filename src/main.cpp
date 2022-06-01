@@ -124,6 +124,7 @@ void loop() {
       display.write(arduinoPoints);
       display.write("   ");
       display.write(userPoints);
+      display.display();
       delay(1000);
     }
   }
