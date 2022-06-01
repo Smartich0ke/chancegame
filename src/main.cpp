@@ -171,10 +171,12 @@ void loop() {
       buttonPressed = 1;
     }
     if (buttonPressed == pickedCircle) {
+      display.clearDisplay();
       currScore.userPoints++;
       currScore.displayScore();
     }
     else {
+      display.clearDisplay();
       display.print("wrong button!!");
       display.display();
       delay(1000);
