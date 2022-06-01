@@ -55,8 +55,9 @@ class scoreboard {
       delay(3000);
     }
     scoreboard() {
-    int rounds = 0;
-    int userPoints = 0;
+    rounds = 0;
+    userPoints = 0;
+    arduinoPoints = 0;
     totalPoints = 0;
     rounds = 0;
   }
@@ -130,23 +131,10 @@ void loop() {
 
     //if someone presses a button to early, the Arduino gains a point:
     if (button1State == 0 || button2State == 0 || button3State == 0) {
-      display.clearDisplay();
-      display.fillCircle((display.width()/3)-15, display.height()/2, 10, SSD1306_WHITE);
-      display.display();
-      delay(100);
-      display.fillCircle(display.width()/2, display.height()/2, 10, SSD1306_WHITE);
-      display.display();
-      delay(100);
-      display.fillCircle(((display.width()/3)*2)+15, display.height()/2, 10, SSD1306_WHITE);
-      display.display();
-      display.setCursor(0, 4);
-      display.setTextSize(1.8);
-      display.print("Ahhh. Too fast!!");
-      display.display();
-      delay(500);
       currScore.arduinoPoints++;
+      currScore.rounds++;
       currScore.displayScore();
-
+      delay(500);
     }
   }
 
