@@ -27,6 +27,7 @@ int button3State;
 
 //Circle variables:
 int pickedCircle;
+int buttonPressed;
 
 //Initialize the display:
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
@@ -142,19 +143,43 @@ void loop() {
   pickedCircle = random(1, 4); //Remember, the max is exclusive so really this is picking a number 1, 3 or 3
   switch (pickedCircle) {
   case 1:
-    /* code */
+    display.fillCircle((display.width()/3)-15, display.height()/2, 10, SSD1306_WHITE);
   break;
   case 2:
-
+    display.fillCircle(display.width()/2, display.height()/2, 10, SSD1306_WHITE);
   break;
   case 3:
-
+    display.fillCircle(((display.width()/3)*2)+15, display.height()/2, 10, SSD1306_WHITE);
   break;
-  default:
-    break;
   }
   startTime = millis();
-  stopTime = startTime + 50;
+  stopTime = startTime + 500;
+  display.print("go!!");
+  display.display();
   for (currTime = 0; currTime <= stopTime;){
-
+    currTime = millis();
+    button1State = digitalRead(BUTTON_1);
+    button2State = digitalRead(BUTTON_2);
+    button3State = digitalRead(BUTTON_3);
+    if (button1State == 0) {
+      buttonPressed = 1;
+    }
+    if (button2State == 0) {
+      buttonPressed = 1;
+    }
+    if (button3State == 0) {
+      buttonPressed = 1;
+    }
+    if (buttonPressed == pickedCircle) {
+      currScore.userPoints++;
+      currScore.displayScore();
+    }
+    else {
+      display.print("wrong button!!");
+      display.display();
+      delay(1000);
+      currScore.arduinoPoints++;
+      currScore.displayScore();
+    }
+  }
 }
