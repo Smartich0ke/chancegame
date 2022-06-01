@@ -154,6 +154,7 @@ void loop() {
       while (button1State == 1) {
         button1State = digitalRead(BUTTON_1);
       }
+      return;
     }
   }
   display.clearDisplay();
@@ -212,7 +213,7 @@ void loop() {
       while (button1State == 1) {
         button1State = digitalRead(BUTTON_1);
       }
-      
+      return;
     }
   }
   display.clearDisplay();
