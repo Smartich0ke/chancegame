@@ -25,17 +25,46 @@ int button1State;
 int button2State;
 int button3State;
 
-//Rounds and scores variables:
-int arduinoPoints;
-int userPoints;
-int totalPoints;
-int rounds;
+
 //Initialize the display:
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+class scoreboard {
+  public:
+    //Rounds and scores variables:
+    int arduinoPoints;
+    int userPoints;
+    int totalPoints;
+    int rounds;
+    void displayScore() {
+      display.clearDisplay();
+      display.setCursor(0, 4);
+      display.setTextSize(1.8);
+      display.print("Score:");
+      display.setCursor(0,20);
+      display.print("Computer     ");
+      display.print("Human");
+      display.setCursor(0, 35);
+      display.setTextSize(3);
+      display.print(" ");
+      display.print(arduinoPoints);
+      Serial.print(arduinoPoints);
+      display.print("   ");
+      display.print(userPoints);
+      display.display();
+      delay(3000);
+    }
+    scoreboard() {
+    int rounds = 0;
+    int userPoints = 0;
+    totalPoints = 0;
+    rounds = 0;
+  }
+};
+
 void setup() {
   //stop and loop forever if display allocation fails
-  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+  if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
     Serial.println(F("SSD1306 allocation failed"));
     for(;;);
   }
@@ -55,11 +84,11 @@ void setup() {
   display.setTextSize(2);
   display.setTextColor(SSD1306_WHITE);
   display.setCursor(0, 0);
-  display.cp437(true);
-  display.write(" Chance\n  v0.1.0"); 
+  //display.cp437(true);
+  display.print(" Chance\n  v0.1.0"); 
   display.setCursor(0, 40);
   display.setTextSize(1.2);
-  display.write("    By Nikolai");
+  display.print("    By Nikolai");
   display.display();
   delay(2000);
 
@@ -67,18 +96,19 @@ void setup() {
   display.clearDisplay();
   display.setCursor(0, 20);
   display.setTextSize(1.8);
-  display.write("Press the button\nunder the light that\nturns on first!\nYou have 100ms\nfor each turn.");
+  display.print("Press the button\nunder the light that\nturns on first!\nYou have 100ms\nfor each turn.");
   display.display();
   delay(1000);
 
 }
 
 void loop() {
+  scoreboard currScore;
   //Draw unfilled circles and display "Get ready!!" text:
   display.clearDisplay();
   display.setCursor(0, 4);
   display.setTextSize(1.8);
-  display.write("Get ready!!");
+  display.print("Get ready!!");
   display.drawCircle(display.width()/2, display.height()/2, 10, SSD1306_WHITE);
   display.drawCircle((display.width()/3)-15, display.height()/2, 10, SSD1306_WHITE);
   display.drawCircle(((display.width()/3)*2)+15, display.height()/2, 10, SSD1306_WHITE);
@@ -103,29 +133,21 @@ void loop() {
       display.clearDisplay();
       display.fillCircle((display.width()/3)-15, display.height()/2, 10, SSD1306_WHITE);
       display.display();
-      delay(200);
+      delay(100);
       display.fillCircle(display.width()/2, display.height()/2, 10, SSD1306_WHITE);
       display.display();
-      delay(200);
+      delay(100);
       display.fillCircle(((display.width()/3)*2)+15, display.height()/2, 10, SSD1306_WHITE);
       display.display();
       display.setCursor(0, 4);
       display.setTextSize(1.8);
-      display.write("Ahhh. Too fast!!");
+      display.print("Ahhh. Too fast!!");
       display.display();
       delay(500);
-      arduinoPoints++;
-      display.clearDisplay();
-      display.setCursor(0, 4);
-      display.setTextSize(1.8);
-      display.write("Score:");
-      display.setCursor(0, 0);
-      display.write("\n");
-      display.write(arduinoPoints);
-      display.write("   ");
-      display.write(userPoints);
-      display.display();
-      delay(1000);
+      currScore.arduinoPoints++;
+      currScore.displayScore();
+
     }
   }
+
 }
