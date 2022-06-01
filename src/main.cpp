@@ -119,6 +119,11 @@ void loop() {
       display.setCursor(0, 4);
       display.setTextSize(1.8);
       display.write("Score:");
+      display.setCursor(0, 0);
+      display.write("\n");
+      display.write(arduinoPoints);
+      display.write("   ");
+      display.write(userPoints);
       delay(1000);
     }
   }
