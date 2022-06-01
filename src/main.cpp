@@ -25,6 +25,8 @@ int button1State;
 int button2State;
 int button3State;
 
+//Circle variables:
+int pickedCircle;
 
 //Initialize the display:
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
@@ -52,7 +54,7 @@ class scoreboard {
       display.print("   ");
       display.print(userPoints);
       display.display();
-      delay(3000);
+      delay(2000);
     }
     scoreboard() {
     rounds = 0;
@@ -134,8 +136,25 @@ void loop() {
       currScore.arduinoPoints++;
       currScore.rounds++;
       currScore.displayScore();
-      delay(500);
     }
   }
+  randomSeed(analogRead(A0));
+  pickedCircle = random(1, 4); //Remember, the max is exclusive so really this is picking a number 1, 3 or 3
+  switch (pickedCircle) {
+  case 1:
+    /* code */
+  break;
+  case 2:
+
+  break;
+  case 3:
+
+  break;
+  default:
+    break;
+  }
+  startTime = millis();
+  stopTime = startTime + 50;
+  for (currTime = 0; currTime <= stopTime;){
 
 }
