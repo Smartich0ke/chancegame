@@ -55,9 +55,6 @@ class scoreboard {
       display.print("   ");
       display.print(userPoints);
       display.display();
-      delay(2000);
-      display.clearDisplay();
-      display.display();
     }
     scoreboard() {
     rounds = 0;
@@ -113,6 +110,10 @@ void setup() {
 }
 
 void loop() {
+  delay(250);
+  button1State = 1;
+  button2State = 1;
+  button3State = 1;
   //Draw unfilled circles and display "Get ready!!" text:
   display.clearDisplay();
   display.setCursor(0, 4);
@@ -129,7 +130,7 @@ void loop() {
   //Run an interrupt timer for a semi-random amount of time:
   startTime = millis();
   stopTime = startTime + random(500, 5000);
-  for (currTime = 0; currTime <= stopTime;){
+  for (currTime = 0; currTime <= stopTime;) {
     currTime = millis();
 
     //Read the button pins and update the status variables:
@@ -166,13 +167,19 @@ void loop() {
   switch (pickedCircle) {
   case 1:
     display.fillCircle((display.width()/3)-15, display.height()/2, 10, SSD1306_WHITE);
+    display.drawCircle(display.width()/2, display.height()/2, 10, SSD1306_WHITE);
+    display.drawCircle(((display.width()/3)*2)+15, display.height()/2, 10, SSD1306_WHITE);
     display.display();
   break;
   case 2:
     display.fillCircle(display.width()/2, display.height()/2, 10, SSD1306_WHITE);
+    display.drawCircle(((display.width()/3)*2)+15, display.height()/2, 10, SSD1306_WHITE);
+    display.drawCircle((display.width()/3)-15, display.height()/2, 10, SSD1306_WHITE);
     display.display();
   break;
   case 3:
+    display.drawCircle((display.width()/3)-15, display.height()/2, 10, SSD1306_WHITE);
+    display.drawCircle(display.width()/2, display.height()/2, 10, SSD1306_WHITE);
     display.fillCircle(((display.width()/3)*2)+15, display.height()/2, 10, SSD1306_WHITE);
     display.display();
   break;
@@ -196,9 +203,20 @@ void loop() {
     }
     if (buttonPressed == pickedCircle) {
       display.clearDisplay();
+      display.setTextSize(1.8);
+      display.setCursor (4, 4);
+      display.print("User wins!!");
       display.display();
+      delay(1000);
       currScore.userPoints++;
       currScore.displayScore();
+      button1State = 1;
+      button2State = 1;
+      button3State = 1;
+      while (button1State == 1) {
+        button1State = digitalRead(BUTTON_1);
+      }
+      return;
     }
     else if (buttonPressed > 0 && buttonPressed != pickedCircle) {
       display.clearDisplay();
@@ -218,11 +236,23 @@ void loop() {
   }
   display.clearDisplay();
   display.setCursor(4, 4);
+  display.setTextSize(1.8);
   display.print("too late!!");
   display.display();
-  delay(1000);
+  delay(500);
+  currScore.arduinoPoints++;
+  currScore.displayScore();
   while (button1State == 1) {
     button1State = digitalRead(BUTTON_1);
   }
-  delay(500);
+  startTime = millis();
+  stopTime = startTime + 2000;
+  for (currTime = 0; currTime <= stopTime;) {
+    currTime = millis();
+    button1State = digitalRead(BUTTON_1);
+    if (button1State == 0) {
+      return;
+    }
+    
+  }
 }
