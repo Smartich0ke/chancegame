@@ -90,7 +90,7 @@ void setup() {
   display.setTextColor(SSD1306_WHITE);
   display.setCursor(0, 0);
   //display.cp437(true);
-  display.print(" Chance\n  v0.1.0"); 
+  display.print("Chance\n  v1.0.0"); 
   display.setCursor(0, 40);
   display.setTextSize(1.2);
   display.print("    By Nikolai");
@@ -101,10 +101,29 @@ void setup() {
   display.clearDisplay();
   display.setCursor(0, 20);
   display.setTextSize(1.8);
-  display.print("Press the button\nunder the light that\nturns on first!\nYou have 100ms\nfor each turn.");
+  display.print("Press the button\nunder the light that\nturns on first!\nYou have 750ms\nfor each turn.");
   display.display();
-  delay(1000);
-
+  startTime = millis();
+  stopTime = startTime + 10000;
+  for (currTime = 0; currTime <= stopTime;) {
+    currTime = millis();
+    button1State = digitalRead(BUTTON_1);
+    if (button1State == 0) {
+      currTime = stopTime;
+    }
+  }
+  display.clearDisplay();
+  display.setCursor(0, 20);
+  display.print("Remember, to to exit the scoreboard press the far left button");
+  display.display();
+  stopTime = startTime + 10000;
+  for (currTime = 0; currTime <= stopTime;) {
+    currTime = millis();
+    button1State = digitalRead(BUTTON_1);
+    if (button1State == 0) {
+      currTime = stopTime;
+    }
+  }
   
 
 }
@@ -163,7 +182,7 @@ void loop() {
   display.print("go!!");
   display.display();
   randomSeed(analogRead(A0));
-  pickedCircle = 1; //Remember, the max is exclusive so really this is picking a number 1, 3 or 3
+  pickedCircle = random(1, 4); //Remember, the max is exclusive so really this is picking a number 1, 3 or 3
   switch (pickedCircle) {
   case 1:
     display.fillCircle((display.width()/3)-15, display.height()/2, 10, SSD1306_WHITE);
@@ -186,7 +205,7 @@ void loop() {
   }
   buttonPressed = 0;
   startTime = millis();
-  stopTime = startTime + 5000;
+  stopTime = startTime + 500;
   for (currTime = 0; currTime <= stopTime;){
     currTime = millis();
     button1State = digitalRead(BUTTON_1);
@@ -196,10 +215,10 @@ void loop() {
       buttonPressed = 1;
     }
     if (button2State == 0) {
-      buttonPressed = 1;
+      buttonPressed = 2;
     }
     if (button3State == 0) {
-      buttonPressed = 1;
+      buttonPressed = 3;
     }
     if (buttonPressed == pickedCircle) {
       display.clearDisplay();
@@ -222,7 +241,7 @@ void loop() {
       display.clearDisplay();
       display.print("wrong button!!\n\nPress the middle button to continue");
       display.display();
-      delay(1000);
+      delay(2000);
       currScore.arduinoPoints++;
       currScore.displayScore();
       button1State = 1;
@@ -239,7 +258,7 @@ void loop() {
   display.setTextSize(1.8);
   display.print("too late!!");
   display.display();
-  delay(500);
+  delay(250);
   currScore.arduinoPoints++;
   currScore.displayScore();
   while (button1State == 1) {
