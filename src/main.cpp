@@ -46,7 +46,7 @@ class scoreboard {
       display.print("Score:");
       display.setCursor(0,20);
       display.print("Computer     ");
-      display.print("Human");
+      display.print("Hooman");
       display.setCursor(0, 35);
       display.setTextSize(3);
       display.print(" ");
@@ -89,39 +89,51 @@ void setup() {
   display.setTextSize(2);
   display.setTextColor(SSD1306_WHITE);
   display.setCursor(0, 0);
-  //display.cp437(true);
-  display.print("Chance\n  v1.0.0"); 
+  display.print("Chance\nv1.0.0"); 
   display.setCursor(0, 40);
   display.setTextSize(1.2);
   display.print("    By Nikolai");
   display.display();
-  delay(2000);
+  stopTime = startTime + 3000;
+  for (currTime = 0; currTime <= stopTime;) {
+    currTime = millis();
+    button3State = digitalRead(BUTTON_3);
+    if (button3State == 0) {
+      button3State = 3;
+      delay(250);
+      currTime = stopTime + 1;
+    }
+  }
 
   //Display instructions on how to play:
   display.clearDisplay();
   display.setCursor(0, 20);
   display.setTextSize(1.8);
-  display.print("Press the button\nunder the light that\nturns on first!\nYou have 750ms\nfor each turn.");
+  display.print("Press the far left button to move through menus and play\nanother round!");
   display.display();
   startTime = millis();
   stopTime = startTime + 10000;
   for (currTime = 0; currTime <= stopTime;) {
     currTime = millis();
-    button1State = digitalRead(BUTTON_1);
-    if (button1State == 0) {
-      currTime = stopTime;
+    button3State = digitalRead(BUTTON_3);
+    if (button3State == 0) {
+      button3State = 1;
+      delay(250);
+      currTime = stopTime + 1;
     }
   }
   display.clearDisplay();
   display.setCursor(0, 20);
-  display.print("Remember, to to exit the scoreboard press the far left button");
+  display.print("Press the button\nunder the light that\nturns on first!\nYou have 750ms\nfor each turn.");
   display.display();
   stopTime = startTime + 10000;
   for (currTime = 0; currTime <= stopTime;) {
     currTime = millis();
-    button1State = digitalRead(BUTTON_1);
-    if (button1State == 0) {
-      currTime = stopTime;
+    button3State = digitalRead(BUTTON_3);
+    if (button3State == 0) {
+      button3State = 1;
+      delay(250);
+      currTime = stopTime + 1;
     }
   }
   
@@ -171,8 +183,8 @@ void loop() {
       button1State = 1;
       button2State = 1;
       button3State = 1;
-      while (button1State == 1) {
-        button1State = digitalRead(BUTTON_1);
+      while (button3State == 1) {
+        button3State = digitalRead(BUTTON_3);
       }
       return;
     }
@@ -232,8 +244,8 @@ void loop() {
       button1State = 1;
       button2State = 1;
       button3State = 1;
-      while (button1State == 1) {
-        button1State = digitalRead(BUTTON_1);
+      while (button3State == 1) {
+        button3State = digitalRead(BUTTON_3);
       }
       return;
     }
@@ -247,8 +259,8 @@ void loop() {
       button1State = 1;
       button2State = 1;
       button3State = 1;
-      while (button1State == 1) {
-        button1State = digitalRead(BUTTON_1);
+      while (button3State == 1) {
+        button3State = digitalRead(BUTTON_3);
       }
       return;
     }
@@ -261,17 +273,9 @@ void loop() {
   delay(250);
   currScore.arduinoPoints++;
   currScore.displayScore();
-  while (button1State == 1) {
-    button1State = digitalRead(BUTTON_1);
+  while (button3State == 1) {
+    button3State = digitalRead(BUTTON_3);
   }
   startTime = millis();
   stopTime = startTime + 2000;
-  for (currTime = 0; currTime <= stopTime;) {
-    currTime = millis();
-    button1State = digitalRead(BUTTON_1);
-    if (button1State == 0) {
-      return;
-    }
-    
-  }
 }
